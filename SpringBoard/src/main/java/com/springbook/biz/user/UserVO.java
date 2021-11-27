@@ -5,6 +5,7 @@ public class UserVO {
 	private String password;
 	private String name;
 	private String role;
+	
 	public String getId() {
 		return id;
 	}
@@ -29,6 +30,7 @@ public class UserVO {
 	public void setRole(String role) {
 		this.role = role;
 	}
+	
 	
 	@Override
 	public String toString() {
