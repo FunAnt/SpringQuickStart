@@ -18,21 +18,20 @@
 	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>	
 	
 	<!-- DataSource Set -->
-	<context:property-placeholder location="classpath:config/database.properties" />
-	
+	<context:property-placeholder location="classpath:config/database.properties" />	
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="${jdbc.driver}" />
 		<property name="url" value="${jdbc.url}" />
 		<property name="username" value="${jdbc.username}" />
 		<property name="password" value="${jdbc.password}" />		
 	</bean>
-	
+	 
 	<!-- Spring JDBC Set -->	 
 	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
-	<!-- Transaction Set -->
+	<!-- Transaction Set --> 
 	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
@@ -42,13 +41,22 @@
 			<tx:method name="get*" read-only="true" />
 			<tx:method name="*" />
 		</tx:attributes>
-	</tx:advice>
+	</tx:advice>	
 	
 	<aop:config>
 		<aop:pointcut id="txPointcut" expression="execution(* com.springbook.biz..*(..))" />
 		<aop:advisor pointcut-ref="txPointcut" advice-ref="txAdvice" />
 	</aop:config>
 	
+	<!-- Spring과 Mybatis 연동 설정 -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="configLocation" value="classpath:sql-map-config.xml" />
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+				 
+	<bean class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSession" />
+	</bean>
 	
 	
 </beans>
